@@ -1,5 +1,8 @@
 package edu.uca.javacurso.tcpmon.db;
 
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+
 public class TablaMailsReg {
 	String alias;
 	String address;
@@ -17,6 +20,7 @@ public class TablaMailsReg {
 		this.estado = estado;
 		this.fecha = fecha;
 	}
+
 	public String generarInsert(){
 		String query = "INSERT INTO "+TablaMails.tableName+" (alias,address,puerto,email,estado,fecha) VALUES ('" +
 																										alias+"', '" +
