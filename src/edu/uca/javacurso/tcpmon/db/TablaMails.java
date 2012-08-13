@@ -61,6 +61,13 @@ public class TablaMails{
 		return lista;
 	}
 	
+	public List<TablaMailsReg> getAllRegistros() throws SQLException{
+		String query="SELECT * FROM "+tableName;
+		Statement stmt = this.db.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		return registrosFromResultSet(rs);
+	}
+	
 	public List<TablaMailsReg> getRegistrosPorCampoVarchar(String nombreCampo, String valor) throws SQLException{
 		String query = "SELECT * FROM "+tableName+" WHERE "+nombreCampo+" = "+"'"+valor+"'";
 		Statement stmt = this.db.createStatement();

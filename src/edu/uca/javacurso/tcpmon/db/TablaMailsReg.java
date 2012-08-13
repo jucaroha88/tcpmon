@@ -2,6 +2,7 @@ package edu.uca.javacurso.tcpmon.db;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.StringTokenizer;
 
 public class TablaMailsReg {
 	String alias;
@@ -30,5 +31,10 @@ public class TablaMailsReg {
 																										estado+"', '"+
 																										fecha+"' )";
 		return query;
+	}
+	
+	@Override
+	public String toString() {
+		return "("+alias+","+address+","+puerto+","+email+","+estado+","+fecha+")";
 	}
 }
