@@ -1,0 +1,4 @@
+ejecutar el main de edu.uca.javacurso.tcpmon.mainapp.TCPMonitorApp
+
+al abrir la ventana principal empieza a correr el monitor, y deja de correr
+cuando se cierra la ventana

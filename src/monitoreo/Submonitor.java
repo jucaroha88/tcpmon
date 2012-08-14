@@ -14,6 +14,9 @@ import java.text.*;
 
 public class Submonitor extends Thread{
 	
+	public static final int default_retry_interval = 10;
+	public static final int default_check_interval = 10;
+	
 	Notificador notificador;
 
 	private Socket monitor;
@@ -22,6 +25,7 @@ public class Submonitor extends Thread{
 	private String ip_servicio = "";
 	private int puerto = 0;
 	private int check_interval = 0;
+	private int retry_interval = 0;
 	private String alias = "";
 	private String mail = "";
 	private String estado = "";
@@ -37,6 +41,7 @@ public class Submonitor extends Thread{
 		
 		this.notificador = notificador;
 		
+		//Extraemos todos las propiedades del archivo propiedades
 		this.archivo=archivo;
 		this.ip_servicio = archivo.getValorPropiedad("address");
 		
@@ -44,7 +49,16 @@ public class Submonitor extends Thread{
 				archivo.getValorPropiedad("ports_list"), ",");
 		
 		this.puerto = Integer.parseInt(puertos.nextToken());
-		//this.check_interval = Integer.parseInt(archivo.getValorPropiedad("check_interval"));
+		try{
+			this.retry_interval = Integer.parseInt(archivo.getValorPropiedad("retry_interval"));
+		}catch(Exception e){
+			this.retry_interval = default_retry_interval;
+		}
+		try {
+			this.check_interval = Integer.parseInt(archivo.getValorPropiedad("check_interval"));
+		} catch (Exception e) {
+			this.check_interval = default_check_interval;
+		}
 		
 		this.alias = archivo.getValorPropiedad("alias");
 		
@@ -58,17 +72,17 @@ public class Submonitor extends Thread{
 		
 		BasicConfigurator.configure();
 		
-		//check interval
+		while(true){
+		
 			try {
 				
+				//Intentamos conectar al ip y puerto del servicio
 				monitor = new Socket( InetAddress.getByName( ip_servicio ), puerto );
 				
-
+				//Fecha actual
 				Date ahora = new Date();
 				SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 				fecha_actual = formateador.format(ahora);
-				
-				
 				
 				archivo.escribirPropiedad("current_state", "OK");
 				archivo.escribirPropiedad("last_check", fecha_actual);
@@ -76,11 +90,15 @@ public class Submonitor extends Thread{
 				logger.info("Conexion Exitosa" + " con " + alias + " " + fecha_actual);
 
 				estado = archivo.getValorPropiedad("current_state");
-				//guardar_db(alias, ip_servicio, puerto, mail, estado, fecha);
-				//enviar_mail(alias, ip_servicio, puerto, mail, estado, fecha);
-				
 				
 				cerrarConexion();
+				
+				//Se duerme durante un intervalo para checkear de nuevo el servicio
+				try {
+					Submonitor.sleep(check_interval*60000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				
 			}catch ( IOException excepcionES ) {
 		       
@@ -100,16 +118,21 @@ public class Submonitor extends Thread{
 		       archivo.escribirPropiedad("last_check", fecha_actual);
 		       archivo.escribirPropiedad("last_notificacion", fecha_actual);
 			   
-		       //enviar_mail(alias, ip_servicio, puerto, mail, estado, fecha);
-		       //guardar_db(alias, ip_servicio, puerto, mail, estado, fecha);
 		       try {
 				this.notificador.notificar(alias, ip_servicio, Integer.toString(puerto), mail, estado, fecha_sql);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			   } catch (SQLException e) {
 				e.printStackTrace();
+			   }
+			   
+			   //Verificacion si falla el servicio
+			   try {
+					Submonitor.sleep(retry_interval*60000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			   
 			}
-		    }
-		
+		}
 	}
 	
 

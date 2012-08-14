@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
+import monitoreo.Detector;
+
 import GUI.Panel;
 
 import edu.uca.javacurso.tcpmon.Notificador;
@@ -22,6 +24,8 @@ import java.awt.event.MouseEvent;
 public class TCPMonitorApp {
 
 	private JFrame frame;
+	
+	Detector monitor;
 	
 	private TCPMonDB db;
 	private Mailer mailer;
@@ -58,6 +62,9 @@ public class TCPMonitorApp {
 		this.db = new TCPMonDB("ledb");
 		this.mailer = new Mailer();
 		this.notificador = new Notificador(db, mailer);
+		
+		this.monitor = new Detector();
+		monitor.ejecutar(notificador);
 		initialize();
 	}
 

@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2012-08-14 18:47:06.914 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.3.2.1 - (599110): instance c013800d-0139-2675-eec9-000002fcd938
+2012-08-14 19:12:02.774 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.3.2.1 - (599110): instance c013800d-0139-268c-c1fe-000002f893b8
 on database directory /home/jk/workspace/tcpmonitor/ledb  
 
 Database Class Loader started - derby.database.classpath=''

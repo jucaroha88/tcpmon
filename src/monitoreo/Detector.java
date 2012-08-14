@@ -18,14 +18,15 @@ public class Detector{
 	public static void main( String args[] )
 	{
 		Detector monitor = new Detector();
-		monitor.ejecutar();
-	}
-	
-	public void ejecutar(){
-		//notificador
+
 		TCPMonDB db = new TCPMonDB("ledb");
 		Mailer mailer = new Mailer();
 		Notificador notificador = new Notificador(db, mailer);
+		
+		monitor.ejecutar(notificador);
+	}
+	
+	public void ejecutar(Notificador notificador){
 		//Leer directorio
 		String path = "Servidores/";
 		
