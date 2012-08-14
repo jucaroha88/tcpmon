@@ -10,6 +10,18 @@ public class Notificador {
 	TCPMonDB db;
 	Mailer mailer;
 	
+	public static void main(String[] args) {
+		TCPMonDB db = new TCPMonDB("ledb");
+		Mailer mailer = new Mailer();
+		Notificador noti = new Notificador(db, mailer);
+		try {
+			noti.notificar("petei-server", "192.168.1.56", "25", "lemail@ledomain.com", "chopu", "2012-08-03 20:32:01");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public Notificador(TCPMonDB db, Mailer mailer) {
 		this.db=db;
 		this.mailer = mailer;

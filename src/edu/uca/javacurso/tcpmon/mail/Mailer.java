@@ -41,7 +41,8 @@ public class Mailer {
 			
 			Transport.send(message);
 		}catch(Exception e){
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("No se pudo enviar el mail");
 		}
 	}
 	
